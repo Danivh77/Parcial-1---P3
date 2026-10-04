@@ -1,4 +1,4 @@
-# Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
+# Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuéllar Vélez, Nikoll Alzate
 
 defmodule Validacion do
   @moduledoc """
@@ -144,5 +144,5 @@ defmodule Validacion do
        do: :ok
 
   defp validar_porcentaje(_defectos), do: {:error, :porcentaje_invalido}
-  
+
 end
