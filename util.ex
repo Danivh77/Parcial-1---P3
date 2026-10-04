@@ -1,16 +1,14 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
 
-@moduledoc """
-  Módulo que contiene las funciones para calcular la liquidación de los confeccionistas.
-  -versión 1.0
-  -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
-  -fecha: 2026-03-10
-  """
 
 defmodule Util do
   @moduledoc """
   Funciones de apoyo del programa: conversión de texto a números, formato de
   dinero, cálculo de máximos con empates y lectura de la consola.
+  -versión 1.0
+  -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
+  -fecha: 2026-03-10
+
   """
 
   # Entrada y salida (funciones impuras del módulo)

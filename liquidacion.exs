@@ -8,10 +8,6 @@
   """
 
 defmodule Liquidacion do
-
-  #valores constantes
-
-defmodule Liquidacion do
   @moduledoc """
   Liquidación de la producción semanal de los confeccionistas.
 
@@ -69,7 +65,7 @@ defmodule Liquidacion do
       lote.defectos <= 10 -> valor_base * 0.88
       true -> valor_base * 0.75
     end
-    
+
     valor_base = lote.prendas * @tarifa_base
 
     valor =
@@ -229,3 +225,4 @@ defmodule Liquidacion do
     }
   end
 end
+
