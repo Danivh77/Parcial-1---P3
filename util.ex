@@ -1,16 +1,12 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
 
-@moduledoc """
-  Módulo que contiene las funciones para calcular la liquidación de los confeccionistas.
-  -versión 1.0
-  -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
-  -fecha: 2026-03-10
-  """
-
 defmodule Util do
   @moduledoc """
   Funciones de apoyo del programa: conversión de texto a números, formato de
   dinero, cálculo de máximos con empates y lectura de la consola.
+  -versión 1.0
+  -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
+  -fecha: 2026-10-04
   """
 
   # Entrada y salida (funciones impuras del módulo)
@@ -37,14 +33,7 @@ defmodule Util do
 
   @doc """
   Convierte un texto en entero.
-
   Devuelve `{:ok, entero}` o `{:error, :formato_invalido}`.
-
-  `String.to_integer/1` lanza `ArgumentError` cuando el texto no es un entero
-  completo (por ejemplo "12abc", "12.5" o ""). El `try/rescue` se usa solo en
-  este borde para convertir esa excepción en una tupla de error, de modo que
-  el resto del programa no necesita `try` y los datos inválidos nunca lo
-  hacen fallar.
   """
   def a_entero(texto) when is_binary(texto) do
     try do
@@ -59,10 +48,7 @@ defmodule Util do
   @doc """
   Convierte un texto en número decimal (con punto, por ejemplo "3.5").
 
-  Devuelve `{:ok, flotante}` o `{:error, :formato_invalido}`. Igual que
-  `a_entero/1`, el `try/rescue` convierte el `ArgumentError` de
-  `String.to_float/1` en una tupla de error. Un entero como "7" no es un
-  decimal válido para esta función; para aceptar ambos use `a_numero/1`.
+  Devuelve `{:ok, flotante}` o `{:error, :formato_invalido}`.
   """
   def a_flotante(texto) when is_binary(texto) do
     try do
@@ -76,11 +62,6 @@ defmodule Util do
 
   @doc """
   Convierte un texto en número, entero o decimal.
-
-  Acepta "7" y "3.5". Primero intenta como entero y, si no lo es, como
-  decimal. Se usa para el porcentaje de defectos, que puede venir de
-  cualquiera de las dos formas. Devuelve `{:ok, numero}` o
-  `{:error, :formato_invalido}`.
   """
   def a_numero(texto) do
     case a_entero(texto) do
@@ -106,8 +87,7 @@ defmodule Util do
   # Dinero
 
   @doc """
-  Redondea un valor monetario a dos decimales. Evita residuos de punto
-  flotante como 239680.00000000003.
+  Redondea un valor monetario a dos decimales.
   """
   def redondear_dinero(valor) when is_number(valor) do
     Float.round(valor * 1.0, 2)
