@@ -1,20 +1,12 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuéllar Vélez, Nikoll Alzate
 
-@moduledoc """
-  Módulo que contiene las funciones para calcular la liquidación de los confeccionistas.
+defmodule Validacion do
+
+  @moduledoc """
+  Validación de los lotes de producción.
   -versión 1.0
   -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
   -fecha: 2026-03-10
-  """
-
-defmodule Validacion do
-  
-  @moduledoc """
-  Validación de los lotes de producción.
-
-  Todas las funciones de este módulo son puras: no imprimen ni leen nada.
-  Los errores de los datos se devuelven como tuplas `{:error, motivo}` y
-  nunca hacen fallar el programa.
   """
 
   # Parámetros de validación (atributos de módulo).

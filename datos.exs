@@ -1,13 +1,13 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
 
-@moduledoc """
+defmodule Datos do
+
+  @moduledoc """
   Módulo que contiene los datos de prueba para el programa.
   -versión 1.0
   -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
-  -fecha: 2026-03-10
+  -fecha: 2026-10-03
   """
-
-defmodule Datos do
 
   def confeccionistas do
     [
