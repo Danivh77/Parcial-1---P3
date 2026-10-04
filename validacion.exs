@@ -1,4 +1,4 @@
-# Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
+# Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuéllar Vélez, Nikoll Alzate
 
 @moduledoc """
   Módulo que contiene las funciones para calcular la liquidación de los confeccionistas.
