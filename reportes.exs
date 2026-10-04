@@ -258,5 +258,43 @@
   end
 
 
+# ---------------------------------------------------------------
+  # C.1: Función de Ranking con Keyword Lists
+  # ---------------------------------------------------------------
+
+  @doc """
+  Genera un ranking de confeccionistas según las opciones especificadas
+  en una keyword list.
+
+  Opciones:
+    * `:campo`  - `:neto` (por defecto), `:prendas` o `:bruto`
+    * `:orden`  - `:desc` (por defecto) o `:asc`
+    * `:limite` - cantidad máxima de elementos a retornar (por defecto todos)
+  """
+  def ranking(liquidaciones, opciones \\ []) do
+    campo = Keyword.get(opciones, :campo, :neto)
+    orden = Keyword.get(opciones, :orden, :desc)
+    limite = Keyword.get(opciones, :limite, length(liquidaciones))
+
+    liquidaciones
+    |> Enum.sort_by(fn item -> Map.get(item, campo, 0) end, orden)
+    |> Enum.take(limite)
+  end
+
+  # ---------------------------------------------------------------
+  # C.2: Combinar producción de dos talleres con Map.merge/3
+  # ---------------------------------------------------------------
+
+  @doc """
+  Combina el mapa de producción diaria del taller local con el mapa de un taller
+  aliado, sumando las prendas producidas en los días presentes en ambos mapas.
+  """
+  def combinar_produccion(taller_local, taller_aliado) do
+    Map.merge(taller_local, taller_aliado, fn _dia, prendas_local, prendas_aliado ->
+      prendas_local + prendas_aliado
+    end)
+  end
+
+
 
 end
