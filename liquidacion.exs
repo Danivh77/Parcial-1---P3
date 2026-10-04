@@ -1,30 +1,10 @@
-# Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuéllar Vélez, Nikoll Alzate
-
-@moduledoc """
-  Módulo que contiene las funciones para calcular la liquidación de los confeccionistas.
-  -versión 1.0
-  -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
-  -fecha: 2026-03-10
-  """
+# Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
 
 defmodule Liquidacion do
 
-  #valores constantes
-
-defmodule Liquidacion do
   @moduledoc """
   Liquidación de la producción semanal de los confeccionistas.
-
-  Todas las funciones son puras: reciben los lotes ya validados y devuelven
-  valores, sin imprimir nada. El valor de un lote, la bonificación diaria y
-  el alquiler se calculan en funciones separadas.
-
-  Para acumular las prendas producidas por confeccionista y día se utiliza
-  un mapa cuyas claves son tuplas de la forma {codigo_confeccionista, dia}.
-
-  Los días de producción (1 al 6) se consultan en `Validacion.dias/0`.
-
-  version 2.0
+  version 1.0
   Autoras: Laura Daniela Vega Herrera, Elizabeth Cuéllar Vélez, Nikoll Alzate
   fecha: 2026-10-04
   """
@@ -69,7 +49,7 @@ defmodule Liquidacion do
       lote.defectos <= 10 -> valor_base * 0.88
       true -> valor_base * 0.75
     end
-    
+
     valor_base = lote.prendas * @tarifa_base
 
     valor =
