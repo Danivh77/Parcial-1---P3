@@ -1,3 +1,5 @@
+# Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
+
 defmodule Datos do
   def confeccionistas do
     [
