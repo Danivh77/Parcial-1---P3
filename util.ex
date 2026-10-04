@@ -1,21 +1,19 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
 
+@moduledoc """
+  Módulo que contiene las funciones para calcular la liquidación de los confeccionistas.
+  -versión 1.0
+  -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
+  -fecha: 2026-03-10
+  """
+
 defmodule Util do
   @moduledoc """
   Funciones de apoyo del programa: conversión de texto a números, formato de
   dinero, cálculo de máximos con empates y lectura de la consola.
-
-  Todas las funciones son puras, excepto `mostrar_mensaje/1` y `leer_linea/1`,
-  que concentran los efectos de entrada y salida de este módulo.
-
-  Nota: la conversión de texto usa `try/rescue` en `a_entero/1` y
-  `a_flotante/1` (uso autorizado por el docente y justificado en el
-  documento de diseño). No hay recursividad en este módulo.
   """
 
-  # ---------------------------------------------------------------
-  # Entrada y salida (únicas funciones impuras del módulo)
-  # ---------------------------------------------------------------
+  # Entrada y salida (funciones impuras del módulo)
 
   @doc """
   Imprime un mensaje en la consola.
@@ -26,8 +24,7 @@ defmodule Util do
 
   @doc """
   Muestra `mensaje`, lee una línea de la consola y devuelve el texto sin
-  espacios en los extremos. Si la entrada se cierra (`:eof`) o falla,
-  devuelve una cadena vacía en lugar de provocar un error.
+  espacios en los extremos.
   """
   def leer_linea(mensaje) do
     case IO.gets(mensaje) do
@@ -36,9 +33,7 @@ defmodule Util do
     end
   end
 
-  # ---------------------------------------------------------------
   # Conversión de texto a número (el error se devuelve como tupla)
-  # ---------------------------------------------------------------
 
   @doc """
   Convierte un texto en entero.
@@ -50,13 +45,6 @@ defmodule Util do
   este borde para convertir esa excepción en una tupla de error, de modo que
   el resto del programa no necesita `try` y los datos inválidos nunca lo
   hacen fallar.
-
-  ## Ejemplos
-
-      iex> Util.a_entero(" 85 ")
-      {:ok, 85}
-      iex> Util.a_entero("12abc")
-      {:error, :formato_invalido}
   """
   def a_entero(texto) when is_binary(texto) do
     try do
@@ -115,9 +103,7 @@ defmodule Util do
   """
   def vacio?(texto) when is_binary(texto), do: String.trim(texto) == ""
 
-  # ---------------------------------------------------------------
   # Dinero
-  # ---------------------------------------------------------------
 
   @doc """
   Redondea un valor monetario a dos decimales. Evita residuos de punto
@@ -129,29 +115,17 @@ defmodule Util do
 
   @doc """
   Da formato a un valor monetario con dos decimales y sin notación científica.
-
-  ## Ejemplos
-
-      iex> Util.formatear_dinero(598560)
-      "$598560.00"
   """
   def formatear_dinero(valor) when is_number(valor) do
     "$" <> :erlang.float_to_binary(redondear_dinero(valor), decimals: 2)
   end
 
-  # ---------------------------------------------------------------
   # Máximos con empates
-  # ---------------------------------------------------------------
 
   @doc """
   Devuelve todos los elementos de `coleccion` cuya clave, calculada con
   `clave_fn`, es la máxima. Si hay empate, devuelve todos los empatados.
   Si la colección está vacía, devuelve `[]`.
-
-  ## Ejemplos
-
-      iex> Util.maximos_por([{"a", 3}, {"b", 5}, {"c", 5}], fn {_, n} -> n end)
-      [{"b", 5}, {"c", 5}]
   """
   def maximos_por(coleccion, clave_fn) when is_function(clave_fn, 1) do
     if Enum.empty?(coleccion) do
@@ -161,4 +135,5 @@ defmodule Util do
       Enum.filter(coleccion, fn elemento -> clave_fn.(elemento) == maximo end)
     end
   end
+
 end

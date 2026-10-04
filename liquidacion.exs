@@ -1,5 +1,16 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuéllar Vélez, Nikoll Alzate
 
+@moduledoc """
+  Módulo que contiene las funciones para calcular la liquidación de los confeccionistas.
+  -versión 1.0
+  -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
+  -fecha: 2026-03-10
+  """
+
+defmodule Liquidacion do
+
+  #valores constantes
+
 defmodule Liquidacion do
   @moduledoc """
   Liquidación de la producción semanal de los confeccionistas.
@@ -46,7 +57,19 @@ defmodule Liquidacion do
       iex> Liquidacion.valor_lote(%{prendas: 70, defectos: 1.5})
       239680.0
   """
+
   def valor_lote(lote) do
+    valor_base=lote.prendas * @tarifa_base
+
+    # regla según porcentaje de defectos
+
+    cond do
+      lote.defectos <= 2 -> valor_base*1.07
+      lote.defectos <= 5 -> valor_base
+      lote.defectos <= 10 -> valor_base * 0.88
+      true -> valor_base * 0.75
+    end
+    
     valor_base = lote.prendas * @tarifa_base
 
     valor =
