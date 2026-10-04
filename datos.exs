@@ -1,6 +1,12 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
 
 defmodule Datos do
+  @moduledoc """
+  Módulo que contiene los datos de prueba para el programa.
+  -versión 1.0
+  -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
+  -fecha: 2026-03-10
+  """
   def confeccionistas do
     [
       %{codigo: "C01", nombre: "María Elena Ríos", alquiler: true},
