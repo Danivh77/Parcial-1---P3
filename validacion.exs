@@ -1,19 +1,24 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
 
+@moduledoc """
+  Módulo que contiene las funciones para calcular la liquidación de los confeccionistas.
+  -versión 1.0
+  -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
+  -fecha: 2026-03-10
+  """
+
 defmodule Validacion do
+  
   @moduledoc """
   Validación de los lotes de producción.
 
   Todas las funciones de este módulo son puras: no imprimen ni leen nada.
   Los errores de los datos se devuelven como tuplas `{:error, motivo}` y
   nunca hacen fallar el programa.
-
-  Los confeccionistas y las líneas se reciben como mapas indexados por su
-  código (`codigo` e `id` respectivamente), para que cada consulta sea una
-  búsqueda directa por clave y no un recorrido de la lista.
   """
 
   # Parámetros de validación (atributos de módulo).
+
   @dia_minimo 1
   @dia_maximo 6
   @prendas_minimas 1
@@ -37,17 +42,6 @@ defmodule Validacion do
 
   @doc """
   Valida un lote aplicando las cinco reglas en orden.
-
-  Recibe el lote (mapa con `:confeccionista`, `:linea`, `:dia`, `:prendas` y
-  `:defectos`), el mapa de confeccionistas indexado por `codigo` y el mapa
-  de líneas indexado por `id`.
-
-  Devuelve `{:ok, lote}` si cumple todas las reglas o `{:error, motivo}` con
-  el primer motivo de rechazo. El `with` se detiene en la primera regla que
-  no devuelve `:ok`, por eso nunca se informa más de un motivo.
-
-  Si al lote le falta una clave, el valor se lee como `nil` y se rechaza con
-  el motivo de esa regla en lugar de provocar un error.
   """
   def validar_lote(lote, confeccionistas, lineas) do
     with :ok <- validar_confeccionista(Map.get(lote, :confeccionista), confeccionistas),
@@ -61,10 +55,6 @@ defmodule Validacion do
 
   @doc """
   Valida una lista de lotes y los separa en válidos y rechazados.
-
-  Devuelve `{validos, rechazados}`, donde `validos` es la lista de lotes que
-  cumplen las cinco reglas y `rechazados` es una lista de tuplas
-  `{lote, motivo}`. Se conserva el orden original en ambas listas.
   """
   def validar_lotes(lotes, confeccionistas, lineas) do
     resultados =
@@ -82,13 +72,8 @@ defmodule Validacion do
 
   @doc """
   Convierte el texto `confeccionista;linea;dia;prendas;defectos` en un lote.
-
-  Devuelve `{:error, :formato_invalido}` cuando no hay exactamente cinco
-  campos, cuando el día o las prendas no son enteros, o cuando el porcentaje
-  de defectos no es numérico. Esta función solo revisa el formato: las cinco
-  reglas de validación se aplican después con `validar_lote/3`.
-
   """
+
   def parsear_lote_adicional(texto) when is_binary(texto) do
     with [codigo, linea, dia, prendas, defectos] <- Util.separar_campos(texto),
          {:ok, dia} <- Util.a_entero(dia),
@@ -144,5 +129,5 @@ defmodule Validacion do
        do: :ok
 
   defp validar_porcentaje(_defectos), do: {:error, :porcentaje_invalido}
-  
+
 end

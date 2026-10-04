@@ -1,14 +1,16 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
 
-defmodule Liquidacion do
-  @moduledoc """
+@moduledoc """
   Módulo que contiene las funciones para calcular la liquidación de los confeccionistas.
   -versión 1.0
   -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
   -fecha: 2026-03-10
   """
 
+defmodule Liquidacion do
+
   #valores constantes
+
   @tarifa_base 3200
   @prendas_bonificacion 120
   @dias_productivos 6
@@ -18,8 +20,10 @@ defmodule Liquidacion do
   @doc """
   función que calcula el valor de un lote según la cantidad de prendas y defectos.
   """
+
   def valor_lote(lote) do
     valor_base=lote.prendas * @tarifa_base
+
     # regla según porcentaje de defectos
 
     cond do
@@ -28,6 +32,7 @@ defmodule Liquidacion do
       lote.defectos <= 10 -> valor_base * 0.88
       true -> valor_base * 0.75
     end
+    
   end
 
   def prendas_confeccionista_dia(lotes, codigo, dia) do
