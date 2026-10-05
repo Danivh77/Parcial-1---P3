@@ -61,8 +61,7 @@ defmodule Programa do
     liquidaciones
   )
 
-  # 7. Ranking con keywoed lists
-
+  # 7. Ranking con keyword lists
   Util.mostrar_mensaje("\nRanking con keyword lists:")
 
   ranking_neto = Reportes.ranking(liquidaciones, [])
@@ -96,12 +95,65 @@ defmodule Programa do
       Util.mostrar_mensaje(inspect(item))
     end)
 
+     # 8. combinar con la producción del taller aliado
+    mostrar_taller_aliado(lotes_validos)
+
+    # 9. Comprobante individual (siempre al final)
+    solicitar_comprobante(lotes_validos, liquidaciones)
+
+  end
+
+  @doc """
+  Combina la producción diaria de R3 con la del taller aliado usando
+  `Map.merge/3` (se suman los días presentes en ambos mapas).
+  """
+  def mostrar_taller_aliado(lotes_validos) do
+    combinada =
+      lotes_validos
+      |> Reportes.produccion_por_dia()
+      |> Reportes.combinar_produccion(@taller_aliado)
+
+    Util.mostrar_mensaje("\nC.2 - Producción combinada con el taller aliado:")
+
+    combinada
+    |> Enum.sort()
+    |> Enum.each(fn {dia, prendas} ->
+      Util.mostrar_mensaje("Día #{dia}: #{prendas} prendas")
+    end)
+  end
+
+  @doc """
+  Pide el código de un confeccionista e imprime su comprobante. Si el código
+  no existe, lo informa sin provocar un error.
+  """
+  def solicitar_comprobante(lotes_validos, liquidaciones) do
+    codigo = Util.leer_linea("\nIngrese el código de un confeccionista para su comprobante: ")
+
+    case Reportes.calcular_comprobante(codigo, lotes_validos, liquidaciones) do
+      {:ok, %{liquidacion: liq, detalle: detalle}} ->
+        Util.mostrar_mensaje("\n=== COMPROBANTE: #{liq.nombre} (#{liq.codigo}) ===")
+
+        Enum.each(detalle, fn fila ->
+          Util.mostrar_mensaje(
+            "Día #{fila.dia}: #{fila.prendas} prendas | " <>
+              "Lotes: #{Util.formatear_dinero(fila.valor)} | " <>
+              "Bonificación: #{Util.formatear_dinero(fila.bonificacion)}"
+          )
+        end)
+
+        Util.mostrar_mensaje("Suma de lotes: #{Util.formatear_dinero(liq.bruto)}")
+        Util.mostrar_mensaje("Suma de bonificaciones: #{Util.formatear_dinero(liq.bonificaciones)}")
+        Util.mostrar_mensaje("Descuento por alquiler: #{Util.formatear_dinero(liq.descuento_alquiler)}")
+        Util.mostrar_mensaje("NETO: #{Util.formatear_dinero(liq.neto)}")
+
+      {:error, :confeccionista_desconocido} ->
+        Util.mostrar_mensaje("No existe un confeccionista con el código \"#{codigo}\".")
+    end
   end
 
   @doc """
   Solicita al usuario un lote adicional y lo valida.
   """
-
   def solicitar_lote_adicional(
       lotes_validos,
       rechazados,

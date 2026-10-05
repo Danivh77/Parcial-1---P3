@@ -6,7 +6,7 @@ defmodule Validacion do
   Validación de los lotes de producción.
   -versión 1.0
   -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
-  -fecha: 2026-03-10
+  -fecha: 2026-10-04
   """
 
   # Parámetros de validación (atributos de módulo).
