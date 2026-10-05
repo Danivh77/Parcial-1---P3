@@ -60,7 +60,42 @@ defmodule Programa do
     lotes_validos,
     liquidaciones
   )
-  
+
+  # 7. Ranking con keywoed lists
+
+  Util.mostrar_mensaje("\nRanking con keyword lists:")
+
+  ranking_neto = Reportes.ranking(liquidaciones, [])
+
+    Util.mostrar_mensaje("\nRanking por neto:")
+    Enum.each(ranking_neto, fn item ->
+      Util.mostrar_mensaje(inspect(item))
+    end)
+
+    ranking_prendas =
+      Reportes.ranking(
+        liquidaciones,
+        campo: :prendas,
+        limite: 3
+      )
+
+    Util.mostrar_mensaje("\nTop 3 por prendas:")
+    Enum.each(ranking_prendas, fn item ->
+      Util.mostrar_mensaje(inspect(item))
+    end)
+
+    ranking_bruto =
+      Reportes.ranking(
+        liquidaciones,
+        orden: :asc,
+        campo: :bruto
+      )
+
+    Util.mostrar_mensaje("\nRanking por bruto ascendente:")
+    Enum.each(ranking_bruto, fn item ->
+      Util.mostrar_mensaje(inspect(item))
+    end)
+
   end
 
   @doc """
