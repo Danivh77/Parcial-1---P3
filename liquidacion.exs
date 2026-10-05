@@ -14,40 +14,12 @@ defmodule Liquidacion do
   @bonificacion_diaria 18_000
   @alquiler_diario 15_000
 
-  # ---------------------------------------------------------------
   # Valor de un lote
-  # ---------------------------------------------------------------
 
   @doc """
   Calcula el valor de un lote según sus prendas y su porcentaje de defectos.
-
-  `valor_base = prendas * 3200`, con este ajuste:
-
-    * hasta 2 %             -> bonificación del 7 %
-    * más de 2 % hasta 5 %  -> sin ajuste
-    * más de 5 % hasta 10 % -> descuento del 12 %
-    * más de 10 %           -> descuento del 25 %
-
-  El resultado se redondea a dos decimales para evitar residuos de punto
-  flotante.
-
-  ## Ejemplos
-
-      iex> Liquidacion.valor_lote(%{prendas: 70, defectos: 1.5})
-      239680.0
   """
-
   def valor_lote(lote) do
-    valor_base=lote.prendas * @tarifa_base
-
-    # regla según porcentaje de defectos
-
-    cond do
-      lote.defectos <= 2 -> valor_base*1.07
-      lote.defectos <= 5 -> valor_base
-      lote.defectos <= 10 -> valor_base * 0.88
-      true -> valor_base * 0.75
-    end
 
     valor_base = lote.prendas * @tarifa_base
 
@@ -62,16 +34,10 @@ defmodule Liquidacion do
     Util.redondear_dinero(valor)
   end
 
-  # ---------------------------------------------------------------
   # Productividad diaria y bonificación
-  # ---------------------------------------------------------------
 
   @doc """
   Acumula las prendas válidas por confeccionista y día.
-
-  Devuelve un mapa cuyas claves son tuplas de la forma
-  `{codigo_confeccionista, dia}` y cuyos valores corresponden
-  al total de prendas acumuladas en esa jornada.
   """
   def acumular_prendas_por_dia(lotes_validos) do
     Enum.reduce(lotes_validos, %{}, fn lote, acumulados ->
@@ -91,12 +57,21 @@ defmodule Liquidacion do
   @doc """
   Devuelve la cantidad de prendas acumuladas por un confeccionista
   en un día determinado.
-
-  La búsqueda se realiza en el mapa de resultados intermedios usando
-  la clave `{codigo_confeccionista, dia}`.
   """
   def prendas_confeccionista_dia(prendas_por_dia, codigo, dia) do
     Map.get(prendas_por_dia, {codigo, dia}, 0)
+  end
+
+   @doc """
+  Suma el valor de los lotes válidos de un confeccionista en un día
+  (se usa en el comprobante individual).
+  """
+  def valor_lotes_dia(lotes_validos, codigo, dia) do
+    lotes_validos
+    |> Enum.filter(fn lote -> lote.confeccionista == codigo and lote.dia == dia end)
+    |> Enum.map(fn lote -> valor_lote(lote) end)
+    |> Enum.sum()
+    |> Util.redondear_dinero()
   end
 
   @doc """
@@ -111,9 +86,7 @@ defmodule Liquidacion do
     end
   end
 
-  # ---------------------------------------------------------------
   # Alquiler de máquinas
-  # ---------------------------------------------------------------
 
   @doc """
   Cantidad de días distintos en los que el confeccionista tiene al menos un
@@ -139,17 +112,12 @@ defmodule Liquidacion do
     end
   end
 
-  # ---------------------------------------------------------------
   # Liquidación
-  # ---------------------------------------------------------------
 
   @doc """
   Liquida a todos los confeccionistas, incluso a quienes no tienen lotes
   válidos (todos sus valores quedan en cero). Devuelve una lista de mapas,
   uno por confeccionista, en el mismo orden de entrada.
-
-  El mapa de prendas acumuladas por confeccionista y día se construye
-  una sola vez y se reutiliza durante toda la liquidación.
   """
   def liquidar_todos(confeccionistas, lotes_validos) do
     prendas_por_dia = acumular_prendas_por_dia(lotes_validos)

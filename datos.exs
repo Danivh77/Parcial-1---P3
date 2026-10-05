@@ -18,7 +18,7 @@ defmodule Datos do
 
   def lineas do
     [
-      %{id: "L1", nombre: "Linea Norte", puestos: 6},
+      %{id: "L1", nombre: "Línea Norte", puestos: 6},
       %{id: "L2", nombre: "Línea Central", puestos: 4}
     ]
   end
