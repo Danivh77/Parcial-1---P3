@@ -33,32 +33,23 @@ defmodule Util do
 
   @doc """
   Convierte un texto en entero.
-  Devuelve `{:ok, entero}` o `{:error, :formato_invalido}`.
   """
-  def a_entero(texto) when is_binary(texto) do
-    try do
-      {:ok, texto |> String.trim() |> String.to_integer()}
-    rescue
-      ArgumentError -> {:error, :formato_invalido}
-    end
+ def a_entero(texto) when is_binary(texto) do
+  case Integer.parse(String.trim(texto)) do
+    {entero, ""} -> {:ok, entero}
+    _ -> {:error, :formato_invalido}
   end
-
-  def a_entero(_otro), do: {:error, :formato_invalido}
+end
 
   @doc """
   Convierte un texto en número decimal (con punto, por ejemplo "3.5").
-
-  Devuelve `{:ok, flotante}` o `{:error, :formato_invalido}`.
   """
   def a_flotante(texto) when is_binary(texto) do
-    try do
-      {:ok, texto |> String.trim() |> String.to_float()}
-    rescue
-      ArgumentError -> {:error, :formato_invalido}
-    end
+  case Float.parse(String.trim(texto)) do
+    {flotante, ""} -> {:ok, flotante}
+    _ -> {:error, :formato_invalido}
   end
-
-  def a_flotante(_otro), do: {:error, :formato_invalido}
+end
 
   @doc """
   Convierte un texto en número, entero o decimal.
