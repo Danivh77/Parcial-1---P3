@@ -1,11 +1,8 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
 
-
-
   defmodule Reportes do
   @moduledoc """
   Generación de los reportes de producción, productividad y liquidación del taller.
-
   Este módulo toma los datos validados y los resultados de la liquidación para
   imprimir en la consola los reportes R1 a R8 formateados adecuadamente.
 
@@ -14,12 +11,7 @@
   -fecha: 2026-10-04
   """
 
-
-
-  # ---------------------------------------------------------------
   # Orquestación de reportes
-  # ---------------------------------------------------------------
-
 
    @doc """
   Ejecuta de manera secuencial la generación de los reportes R1 a R8.
@@ -35,9 +27,7 @@
     reporte_r8(confeccionistas, lineas, lotes_validos)
   end
 
-  # ---------------------------------------------------------------
   # R1: Lotes rechazados y motivos
-  # ---------------------------------------------------------------
 
   @doc """
   Imprime la lista de lotes rechazados especificando el motivo de rechazo
@@ -62,9 +52,7 @@
     end
   end
 
-  # ---------------------------------------------------------------
   # R2: Productividad por línea de producción
-  # ---------------------------------------------------------------
 
   @doc """
   Calcula el total de prendas producidas por cada línea y su nivel de
@@ -86,9 +74,7 @@
     end)
   end
 
-  # ---------------------------------------------------------------
   # R3: Producción diaria y cumplimiento de metas
-  # ---------------------------------------------------------------
 
   @doc """
   Evalúa la producción global del taller para los días 1 al 6 frente a la meta
@@ -110,9 +96,7 @@
     Util.mostrar_mensaje("¿Meta alcanzada AL MENOS UN día?: #{if Enum.any?(dias, & &1.meta), do: "SÍ", else: "NO"}")
   end
 
-  # ---------------------------------------------------------------
   # R4: Liquidación ordenada de confeccionistas
-  # ---------------------------------------------------------------
 
   @doc """
   Muestra la liquidación individual de cada confeccionista detallando prendas,
@@ -134,9 +118,7 @@
     end)
   end
 
-  # ---------------------------------------------------------------
   # R5: Máximos productores diarios y líder semanal
-  # ---------------------------------------------------------------
 
   @doc """
   Determina el confeccionista o confeccionistas con mayor número de prendas producidas
@@ -178,9 +160,7 @@
     end
   end
 
-  # ---------------------------------------------------------------
   # R6: Mejor calidad (porcentaje ponderado de defectos)
-  # ---------------------------------------------------------------
 
   @doc """
   Identifica al confeccionista con menor porcentaje ponderado de defectos.
@@ -209,9 +189,7 @@
     end
   end
 
-  # ---------------------------------------------------------------
   # R7: Totales financieros y costo promedio por prenda
-  # ---------------------------------------------------------------
 
   @doc """
   Calcula el monto global desembolsado por el taller en la liquidación y el costo
@@ -230,9 +208,7 @@
     end
   end
 
-  # ---------------------------------------------------------------
   # R8: Cobertura total de líneas de producción
-  # ---------------------------------------------------------------
 
   @doc """
   Verifica e imprime la lista de confeccionistas que registraron al menos un lote
@@ -257,19 +233,11 @@
     end
   end
 
-
-# ---------------------------------------------------------------
   # C.1: Función de Ranking con Keyword Lists
-  # ---------------------------------------------------------------
 
   @doc """
   Genera un ranking de confeccionistas según las opciones especificadas
   en una keyword list.
-
-  Opciones:
-    * `:campo`  - `:neto` (por defecto), `:prendas` o `:bruto`
-    * `:orden`  - `:desc` (por defecto) o `:asc`
-    * `:limite` - cantidad máxima de elementos a retornar (por defecto todos)
   """
   def ranking(liquidaciones, opciones \\ []) do
     campo = Keyword.get(opciones, :campo, :neto)
@@ -281,9 +249,7 @@
     |> Enum.take(limite)
   end
 
-  # ---------------------------------------------------------------
   # C.2: Combinar producción de dos talleres con Map.merge/3
-  # ---------------------------------------------------------------
 
   @doc """
   Combina el mapa de producción diaria del taller local con el mapa de un taller
@@ -294,7 +260,5 @@
       prendas_local + prendas_aliado
     end)
   end
-
-
 
 end
