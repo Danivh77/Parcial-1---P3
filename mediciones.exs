@@ -172,6 +172,7 @@ defmodule Mediciones do
     IO.puts("Arquitectura:  #{:erlang.system_info(:system_architecture)}")
     IO.puts("Hilos lógicos: #{System.schedulers_online()}")
     IO.puts("Computador:    ASUS TUF Gaming F15, Intel Core i5-12500H, 16 GB RAM")
+  end
 end
 
 defmodule FormatoMediciones do
@@ -238,8 +239,6 @@ defmodule FormatoMediciones do
   # Cuántas veces es más rápida la opción B que la A.
   defp razon(_ms_a, ms_b) when ms_b == 0, do: "—"
   defp razon(ms_a, ms_b), do: :erlang.float_to_binary(ms_a / ms_b, decimals: 1) <> "x"
-end
-
 end
 
 Mediciones.ejecutar()

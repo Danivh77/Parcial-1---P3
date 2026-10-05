@@ -1,27 +1,29 @@
 # Integrantes: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
 
-
-
 defmodule Reportes do
   @moduledoc """
   Módulo encargado de generar los reportes de producción, calidad y rendimiento,
   así como las funciones de investigación (C.1, C.2) y el comprobante individual.
-
-  Sigue una arquitectura donde los cálculos son funciones puras (calcular_rN)
-  y la salida a consola se maneja en funciones separadas (reporte_rN).
-
   -versión 1.0
   -autoras: Laura Daniela Vega Herrera, Elizabeth Cuellar Vélez, Nikoll Alzate
   -fecha: 2026-10-04
   """
 
-
   @meta_diaria 600
-  @taller_aliado %{1 => 550, 2 => 620, 3 => 480, 5 => 710, 7 => 200}
 
-  # ===============================================================
+  @doc "Muestra los ocho reportes en orden."
+  def generar_todos(confeccionistas, lineas, rechazados, lotes_validos, liquidaciones) do
+    reporte_r1(rechazados)
+    reporte_r2(lotes_validos, lineas)
+    reporte_r3(lotes_validos)
+    reporte_r4(liquidaciones)
+    reporte_r5(lotes_validos, confeccionistas)
+    reporte_r6(lotes_validos, confeccionistas)
+    reporte_r7(liquidaciones, lotes_validos)
+    reporte_r8(lotes_validos, confeccionistas, lineas)
+  end
+
   # R1: LOTES RECHAZADOS
-  # ===============================================================
 
   @doc "Calcula las frecuencias de rechazo por motivo (Función pura)."
   def calcular_r1(rechazados) do
@@ -51,9 +53,7 @@ defmodule Reportes do
     end
   end
 
-  # ===============================================================
   # R2: PRODUCTIVIDAD POR LÍNEA DE PRODUCCIÓN
-  # ===============================================================
 
   @doc "Calcula las prendas y productividad por puesto para cada línea (Función pura)."
   def calcular_r2(lotes_validos, lineas) do
@@ -90,9 +90,7 @@ defmodule Reportes do
     end)
   end
 
-  # ===============================================================
   # R3: PRODUCCIÓN DIARIA Y METAS
-  # ===============================================================
 
   @doc "Obtiene la producción acumulada por día (Función pura)."
   def produccion_por_dia(lotes_validos) do
@@ -133,9 +131,7 @@ defmodule Reportes do
     Util.mostrar_mensaje("¿Meta alcanzada AL MENOS UN día?: #{si_no(resultado.alguno)}")
   end
 
-  # ===============================================================
   # R4: LIQUIDACIÓN ORDENADA
-  # ===============================================================
 
   @doc "Ordena las liquidaciones de mayor a menor según el pago neto (Función pura)."
   def calcular_r4(liquidaciones) do
@@ -152,14 +148,12 @@ defmodule Reportes do
     |> Enum.each(fn {liq, i} ->
       Util.mostrar_mensaje(
         "#{i}. #{liq.nombre} (#{liq.codigo}): #{liq.prendas} prendas | Lotes: $#{fmt(liq.bruto)} | " <>
-        "Bonificación: $#{fmt(liq.bonificaciones)} | Alquiler: $#{fmt(liq.alquiler)} | Neto: $#{fmt(liq.neto)}"
+        "Bonificación: $#{fmt(liq.bonificaciones)} | Alquiler: $#{fmt(liq.descuento_alquiler)} | Neto: $#{fmt(liq.neto)}"
       )
     end)
   end
 
-  # ===============================================================
   # R5: MÁXIMO PRODUCTOR POR DÍA Y LÍDER SEMANAL
-  # ===============================================================
 
   @doc "Calcula los confeccionistas con mayor producción cada día y el/los líder(es) de la semana (Función pura)."
   def calcular_r5(lotes_validos, confeccionistas) do
@@ -228,9 +222,7 @@ defmodule Reportes do
     end
   end
 
-  # ===============================================================
   # R6: MEJOR CALIDAD (MENOR % DEFECTOS PONDERADO)
-  # ===============================================================
 
   @doc "Calcula el confeccionista con mejor calidad entre los que tienen >= 3 lotes válidos (Función pura)."
   def calcular_r6(lotes_validos, confeccionistas) do
@@ -274,9 +266,7 @@ defmodule Reportes do
     end
   end
 
-  # ===============================================================
   # R7: COSTO TOTAL Y COSTO PROMEDIO POR PRENDA
-  # ===============================================================
 
   @doc "Calcula el total a pagar y el costo promedio por prenda válida (Función pura)."
   def calcular_r7(liquidaciones, lotes_validos) do
@@ -304,9 +294,7 @@ defmodule Reportes do
     end
   end
 
-  # ===============================================================
   # R8: COBERTURA TOTAL DE LÍNEAS
-  # ===============================================================
 
   @doc "Identifica confeccionistas con al menos un lote válido en todas las líneas (Función pura)."
   def calcular_r8(lotes_validos, confeccionistas, lineas) do
@@ -337,9 +325,7 @@ defmodule Reportes do
     end
   end
 
-  # ===============================================================
   # B.5: COMPROBANTE INDIVIDUAL
-  # ===============================================================
 
   @doc "Calcula los datos detallados del comprobante de pago individual (Función pura)."
   def calcular_comprobante(codigo, lotes_validos, liquidaciones) do
@@ -366,40 +352,7 @@ defmodule Reportes do
     end
   end
 
-  @doc "Muestra en consola el comprobante individual de un confeccionista."
-  def mostrar_comprobante(codigo, lotes_validos, liquidaciones) do
-    case calcular_comprobante(codigo, lotes_validos, liquidaciones) do
-      {:error, :confeccionista_desconocido} ->
-        Util.mostrar_mensaje("Error: El confeccionista con código '#{codigo}' no existe.")
-
-      {:ok, %{liquidacion: liq, detalle: detalle}} ->
-        Util.mostrar_mensaje("\n=======================================================")
-        Util.mostrar_mensaje("         COMPROBANTE INDIVIDUAL DE PAGO                ")
-        Util.mostrar_mensaje("=======================================================")
-        Util.mostrar_mensaje("Confeccionista: #{liq.nombre} (#{liq.codigo})")
-        Util.mostrar_mensaje("-------------------------------------------------------")
-        Util.mostrar_mensaje("Día | Prendas | Valor Lotes   | Bonificación")
-        Util.mostrar_mensaje("-------------------------------------------------------")
-
-        Enum.each(detalle, fn d ->
-          Util.mostrar_mensaje(
-            " #{d.dia}  |   #{String.pad_leading(to_string(d.prendas), 5)} | $" <>
-            "#{String.pad_leading(fmt(d.valor), 12)} | $#{fmt(d.bonificacion)}"
-          )
-        end)
-
-        Util.mostrar_mensaje("-------------------------------------------------------")
-        Util.mostrar_mensaje("Suma de Lotes:          $#{fmt(liq.bruto)}")
-        Util.mostrar_mensaje("Suma de Bonificaciones:  $#{fmt(liq.bonificaciones)}")
-        Util.mostrar_mensaje("Descuento Alquiler:     -$#{fmt(liq.alquiler)}")
-        Util.mostrar_mensaje("PAGO NETO TOTAL:        $#{fmt(liq.neto)}")
-        Util.mostrar_mensaje("=======================================================\n")
-    end
-  end
-
-  # ===============================================================
   # C.1: INVESTIGACIÓN - KEYWORD LISTS (RANKING)
-  # ===============================================================
 
   @doc """
   Genera un ranking de confeccionistas basado en una keyword list con opciones.
@@ -415,9 +368,7 @@ defmodule Reportes do
     |> Enum.take(limite)
   end
 
-  # ===============================================================
   # C.2: INVESTIGACIÓN - MAP.MERGE/3
-  # ===============================================================
 
   @doc "Combina la producción de dos talleres sumando las prendas de los días comunes."
   def combinar_produccion(taller_local, taller_aliado) do
@@ -426,20 +377,7 @@ defmodule Reportes do
     end)
   end
 
-  @doc "Muestra la demostración de la combinación con el taller aliado (C.2)."
-  def mostrar_demostracion_c2(lotes_validos) do
-    taller_local = produccion_por_dia(lotes_validos)
-    combinado = combinar_produccion(taller_local, @taller_aliado)
-
-    Util.mostrar_mensaje("\n=== C.2: COMBINACIÓN DE PRODUCCIÓN CON TALLER ALIADO ===")
-    Util.mostrar_mensaje("Producción Taller Local:  #{inspect(taller_local)}")
-    Util.mostrar_mensaje("Producción Taller Aliado: #{inspect(@taller_aliado)}")
-    Util.mostrar_mensaje("Producción Combinada:     #{inspect(combinado)}")
-  end
-
-  # ===============================================================
   # FUNCIONES AUXILIARES PRIVADAS
-  # ===============================================================
 
   defp si_no(true), do: "SÍ"
   defp si_no(false), do: "NO"
