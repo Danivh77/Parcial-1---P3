@@ -61,39 +61,10 @@ defmodule Programa do
     liquidaciones
   )
 
-  # 7. Ranking con keyword lists
-  Util.mostrar_mensaje("\nRanking con keyword lists:")
-
-  ranking_neto = Reportes.ranking(liquidaciones, [])
-
-    Util.mostrar_mensaje("\nRanking por neto:")
-    Enum.each(ranking_neto, fn item ->
-      Util.mostrar_mensaje(inspect(item))
-    end)
-
-    ranking_prendas =
-      Reportes.ranking(
-        liquidaciones,
-        campo: :prendas,
-        limite: 3
-      )
-
-    Util.mostrar_mensaje("\nTop 3 por prendas:")
-    Enum.each(ranking_prendas, fn item ->
-      Util.mostrar_mensaje(inspect(item))
-    end)
-
-    ranking_bruto =
-      Reportes.ranking(
-        liquidaciones,
-        orden: :asc,
-        campo: :bruto
-      )
-
-    Util.mostrar_mensaje("\nRanking por bruto ascendente:")
-    Enum.each(ranking_bruto, fn item ->
-      Util.mostrar_mensaje(inspect(item))
-    end)
+      # 7. Rankings con keyword lists
+    mostrar_ranking("Ranking por neto", Reportes.ranking(liquidaciones, []))
+    mostrar_ranking("Top 3 por prendas", Reportes.ranking(liquidaciones, campo: :prendas, limite: 3))
+    mostrar_ranking("Ranking por bruto ascendente", Reportes.ranking(liquidaciones, orden: :asc, campo: :bruto))
 
      # 8. combinar con la producción del taller aliado
     mostrar_taller_aliado(lotes_validos)
@@ -101,6 +72,22 @@ defmodule Programa do
     # 9. Comprobante individual (siempre al final)
     solicitar_comprobante(lotes_validos, liquidaciones)
 
+  end
+
+    @doc """
+  Imprime un ranking numerado, una línea por confeccionista.
+  """
+  def mostrar_ranking(titulo, ranking) do
+    Util.mostrar_mensaje("\n#{titulo}")
+
+    ranking
+    |> Enum.with_index(1)
+    |> Enum.each(fn {l, posicion} ->
+      Util.mostrar_mensaje(
+        "#{posicion}. #{l.nombre} (#{l.codigo}) | Prendas: #{l.prendas} | " <>
+          "Lotes: #{Util.formatear_dinero(l.bruto)} | NETO: #{Util.formatear_dinero(l.neto)}"
+      )
+    end)
   end
 
   @doc """
